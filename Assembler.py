@@ -36,54 +36,67 @@ register_to_binary = {
 }
 
 
-#  type R instructions and opcode store
-ld="00100"  # Load
-st="00101"  # Store
-add="00000"  # Add
-sub="00001"  # Subtract
-mul="00110"  # Multiply
-xor="01010"  # Exclusive OR
-Or="01011"   # Logical OR
-And="01100"  # Logical AND
-movi="00010" # Move Immediate
-rsi="01000"  # Right Shift Immediate
-lsi="01001"  # Left Shift Immediate
-mov="00011"  # Move
-div="00111"  # Divide
-Not="01101"  # Logical NOT
-com="01110"  # Compare
+
+instruction_dict = {
+    "ld": "00100",     # Load
+    "st": "00101",     # Store
+    "add": "00000",    # Add
+    "sub": "00001",    # Subtract
+    "mul": "00110",    # Multiply
+    "xor": "01010",    # Exclusive OR
+    "Or": "01011",     # Logical OR
+    "And": "01100",    # Logical AND
+    "movi": "00010",   # Move Immediate
+    "rsi": "01000",    # Right Shift Immediate
+    "lsi": "01001",    # Left Shift Immediate
+    "mov": "00011",    # Move
+    "div": "00111",    # Divide
+    "Not": "01101",    # Logical NOT
+    "com": "01110",    # Compare
+
+
+    "lw": "0000011",    # Load word
+    "addi": "0010011",  # Add immediate
+    "sltiu": "0010011", # Set less than immediate unsigned
+    "jalr": "1100111",  # Jump and link register
+
+
+    "sw": "0100011",    # Store word
+
+
+    "beq": "1100011",   # Branch if equal
+    "bne": "1100011",   # Branch if not equal
+    "blt": "1100011",   # Branch if less than
+    "bge": "1100011",   # Branch if greater than or equal
+    "bltu": "1100011",  # Branch if less than unsigned
+    "bgeu": "1100011",  # Branch if greater than or equal unsigned
+
+
+    "lui": "0110111",   # Load upper immediate
+    "auipc": "0010111", # Add upper immediate to PC
+
+    "jal": "1101111",   # Jump and link
+    
+}
 
 
 
-# # type I
-lw="0000011"    # Load word
-addi="0010011"  # Add immediate
-sltiu="0010011" # Set less than immediate unsigned
-jalr="1100111"  # Jump and link register
+
+def add(){
 
 
-# S-Type Instructions
-sw="0100011"    # Store word
 
-# B-Type Instructions
-beq="1100011"   # Branch if equal
-bne="1100011"   # Branch if not equal
-blt="1100011"   # Branch if less than
-bge="1100011"   # Branch if greater than or equal
-bltu="1100011"  # Branch if less than unsigned
-bgeu="1100011"  # Branch if greater than or equal unsigned
-
-# U-Type Instructions
-lui="0110111"   # Load upper immediate
-auipc="0010111" # Add upper immediate to PC
-
-# J-Type Instructions
-jal="1101111"   # Jump and link
+    
+}
 
 
 
 
 var = {}
+
+
 register=['x0', 'x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8', 'x9', 'x10', 'x11', 'x12', 'x13', 'x14', 'x15', 'x16', 'x17', 'x18', 'x19', 'x20', 'x21', 'x22', 'x23', 'x24', 'x25', 'x26', 'x27', 'x28', 'x29', 'x30', 'x31']
+
+
 
 
