@@ -6,6 +6,7 @@ label_collection = []
 list_of_errors = []
 instructions = []
 
+# Dictionary mapping register names to their binary representations
 register_to_binary = {
     "zero": "00000",
     "ra": "00001",
@@ -42,62 +43,62 @@ register_to_binary = {
     "t6": "11111",
 }
 
+# Dictionary mapping instructions to their binary opcodes
+# Dictionary mapping instructions to their binary opcodes
 instruction_dict = {
     "add": "0110011",    # Add
     "sub": "0110011",    # Subtract
-    "sll": "0110011",
-    "srl": "0110011",
-    "slt": "0110011",
-    "sltu": "0110011",
+    "sll": "0110011",    # Shift Left Logical
+    "srl": "0110011",    # Shift Right Logical
+    "slt": "0110011",    # Set Less Than
+    "sltu": "0110011",   # Set Less Than Unsigned
     "xor": "0110011",    # Exclusive OR
     "Or": "0110011",     # Logical OR
     "And": "0110011",    # Logical AND
 
-    "lw":"0000011",
-    "addi":"0010011",
-    "sltiu":"0010011",
-    "jalr":"1100111",
+    "lw": "0000011",     # Load Word
+    "addi": "0010011",   # Add Immediate
+    "sltiu": "0010011",  # Set Less Than Immediate Unsigned
+    "jalr": "1100111",   # Jump and Link Register
 
-    #Instructions for Bonus part to be done later
-
-    # "mul":"0000000",
-    # "rst":"0000000",
-    # "halt":"0000000",
-    # "rvrs":"0000000",
-
-
+    # Instructions for Bonus part to be done later
+    # "mul": "0000000",
+    # "rst": "0000000",
+    # "halt": "0000000",
+    # "rvrs": "0000000",
 }
 
+# Dictionary mapping instructions to their function3 values
 function3 = {
     "add": "000",    # Add
     "sub": "000",    # Subtract
-    "sll": "001",
-    "srl": "101",
-    "slt": "010",
-    "sltu": "011",
+    "sll": "001",    # Shift Left Logical
+    "srl": "101",    # Shift Right Logical
+    "slt": "010",    # Set Less Than
+    "sltu": "011",   # Set Less Than Unsigned
     "xor": "100",    # Exclusive OR
     "Or": "110",     # Logical OR
     "And": "111",    # Logical AND
 
-    "lw":"010",
-    "addi":"000",
-    "sltiu":"011",
-    "jalr":"000",
-
-
+    "lw": "010",     # Load Word
+    "addi": "000",   # Add Immediate
+    "sltiu": "011",  # Set Less Than Immediate Unsigned
+    "jalr": "000",   # Jump and Link Register
 }
 
+# Dictionary mapping instructions to their function7 values
 function7 = {
     "add": "0000000",    # Add
     "sub": "0100000",    # Subtract
-    "sll": "0000000",
-    "srl": "0000000",
-    "slt": "0000000",
-    "sltu": "0000000",
+    "sll": "0000000",    # Shift Left Logical
+    "srl": "0000000",    # Shift Right Logical
+    "slt": "0000000",    # Set Less Than
+    "sltu": "0000000",   # Set Less Than Unsigned
     "xor": "0000000",    # Exclusive OR
     "Or": "0000000",     # Logical OR
     "And": "0000000",    # Logical AND
 }
+
 
 def type_R(instruct, list_output):
     s = ""
@@ -113,10 +114,8 @@ def type_R(instruct, list_output):
     s += function3[instruct[0]]
     s += register_to_binary[instruct[1]]
     s += instruction_dict[instruct[0]]
-        
+
     list_output.append(s)
-
-
 
 def decimal_to_12bit_binary(decimal_num):
     # Ensure the input is a non-negative integer or 0
@@ -127,12 +126,6 @@ def decimal_to_12bit_binary(decimal_num):
     binary_representation = format(decimal_num, '012b')
 
     return binary_representation
-
-
-
-
-
-
 
 def type_I(instruct, list_output):
     numeric_value_str = instruct[2]  # Remove the comma from the numeric value
@@ -151,10 +144,8 @@ def type_I(instruct, list_output):
 
     list_output.append(s)
 
-
 instruct = ["addi", "zero", "0", "zero"]
 type_I(instruct, list_output)
 
 for i in list_output:
     print(i)
-
