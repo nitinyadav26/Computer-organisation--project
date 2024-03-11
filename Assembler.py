@@ -169,10 +169,8 @@ def decimal_to_20bit_twos_complement(decimal_number):
 
     return padded_binary
 
-# Example usage:
-decimal_number = -12345
-twos_complement_binary = decimal_to_20bit_twos_complement(decimal_number)
-print(f"The 20-bit 2's complement binary representation of {decimal_number} is: {twos_complement_binary}")
+
+
 
 
 def type_J(instruct, list_output):
