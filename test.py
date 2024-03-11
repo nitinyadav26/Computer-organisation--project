@@ -58,6 +58,14 @@ instruction_dict = {
     "sltiu":"0010011",
     "jalr":"1100111",
 
+    #Instructions for Bonus part to be done later
+
+    # "mul":"0000000",
+    # "rst":"0000000",
+    # "halt":"0000000",
+    # "rvrs":"0000000",
+
+
 }
 
 function3 = {
@@ -91,10 +99,29 @@ function7 = {
     "And": "0000000",    # Logical AND
 }
 
+def type_R(instruct, list_output):
+    s = ""
+
+    if instruct[0] not in function7 or instruct[0] not in function3 or instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    s += function7[instruct[0]]
+    s += register_to_binary[instruct[3]]
+    s += register_to_binary[instruct[2]]
+    s += function3[instruct[0]]
+    s += register_to_binary[instruct[1]]
+    s += instruction_dict[instruct[0]]
+        
+    list_output.append(s)
+
+
+
 def decimal_to_12bit_binary(decimal_num):
-    # Ensure the input is a non-negative integer
+    # Ensure the input is a non-negative integer or 0
     if not isinstance(decimal_num, int) or decimal_num < 0:
-        raise ValueError("Input must be a non-negative integer")
+        raise ValueError("Input must be a non-negative integer or 0")
 
     # Convert decimal to binary and format as 12 bits
     binary_representation = format(decimal_num, '012b')
@@ -104,42 +131,30 @@ def decimal_to_12bit_binary(decimal_num):
 
 
 
-def type_R(instruct, list_output):
-    s = ""
 
-    if instruct[0] not in function7 or instruct[0] not in function3 or instruct[0] not in instruction_dict:
-        # Handle unrecognized instruction
-        print(f"Unrecognized instruction: {instruct[0]}")
-        return
-
-    s += instruction_dict.get(instruct[0], "")
-    s += register_to_binary.get(instruct[3], "")
-    s += register_to_binary.get(instruct[2], "")
-    s += register_to_binary.get(instruct[1], "")
-    s += function3.get(instruct[0], "")
-    s += register_to_binary.get(instruct[0], "")
-    s += function7.get(instruct[0], "")
-
-    list_output.append(s)
 
 
 def type_I(instruct, list_output):
-    s = ""
+    numeric_value_str = instruct[2]  # Remove the comma from the numeric value
+    s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
 
     if instruct[0] not in function3 or instruct[0] not in instruction_dict:
         # Handle unrecognized instruction
         print(f"Unrecognized instruction: {instruct[0]}")
         return
 
-    s += instruction_dict.get(instruct[0], "")
-    s += register_to_binary.get(instruct[2], "")
+    register_name = instruct[3]  # Remove the comma from the register name
+    s += register_to_binary.get(register_name, "")
+    s += function3.get(instruct[0], "")
     s += register_to_binary.get(instruct[1], "")
-    s += decimal_to_12bit_binary(int(instruct[3]))  # Convert the immediate value to binary
+    s += instruction_dict.get(instruct[0], "")
+
     list_output.append(s)
 
 
-instruct = ["addi", "rd", "rs", "5"]
+instruct = ["addi", "zero", "0", "zero"]
 type_I(instruct, list_output)
 
 for i in list_output:
     print(i)
+
