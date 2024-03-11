@@ -61,6 +61,8 @@ instruction_dict = {
     "sltiu": "0010011",  # Set Less Than Immediate Unsigned
     "jalr": "1100111",   # Jump and Link Register
 
+    "jal":"1101111",
+
     # Instructions for Bonus part to be done later
     # "mul": "0000000",
     # "rst": "0000000",
@@ -150,25 +152,55 @@ def type_I(instruct, list_output):
 
     list_output.append(s)
 
+
+def decimal_to_20bit_twos_complement(decimal_number):
+    # Check if the decimal number is within the valid range for a 20-bit 2's complement representation
+    if decimal_number < -2**19 or decimal_number >= 2**19:
+        raise ValueError("Decimal number out of range for a 20-bit 2's complement representation")
+
+    # Handle negative numbers
+    if decimal_number < 0:
+        binary_representation = bin(decimal_number + 2**20)[2:]
+    else:
+        binary_representation = bin(decimal_number)[2:]
+
+    # Pad the binary representation with zeros to make it 20 bits long
+    padded_binary = binary_representation.zfill(20)
+
+    return padded_binary
+
+# Example usage:
+decimal_number = -12345
+twos_complement_binary = decimal_to_20bit_twos_complement(decimal_number)
+print(f"The 20-bit 2's complement binary representation of {decimal_number} is: {twos_complement_binary}")
+
+
 def type_J(instruct, list_output):
     numeric_value_str = instruct[2]  # Remove the comma from the numeric value
-    s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
+    k = decimal_to_20bit_twos_complement(int(numeric_value_str))  # Convert the numeric value to binary
+    
+    # Extract the bits from the binary representation for the J-type instruction
+    s = k[-12:-1]
+    s += k[0:9]
 
-    if instruct[0] not in function3 or instruct[0] not in instruction_dict:
+    if instruct[0] not in instruction_dict:
         # Handle unrecognized instruction
         print(f"Unrecognized instruction: {instruct[0]}")
         return
+    
+    # Add opcode and register bits to the binary representation
+    s += register_to_binary[instruct[1]]
+    s += "1101111"
 
-    register_name = instruct[3]  # Remove the comma from the register name
-    s += register_to_binary.get(register_name, "")
-    s += function3.get(instruct[0], "")
-    s += register_to_binary.get(instruct[1], "")
-    s += instruction_dict.get(instruct[0], "")
-
+    # Append the binary representation to the output list
     list_output.append(s)
 
-instruct = ["addi", "zero", "0", "zero"]
-type_I(instruct, list_output)
+# Example usage of type_J function:
+instruct = ["jal", "t1", "-1024"]
+list_output = []  # Initialize the list to store binary representations
+type_J(instruct, list_output)
 
+# Print the binary representations in the list
 for i in list_output:
     print(i)
+
