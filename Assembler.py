@@ -150,7 +150,7 @@ def type_I(instruct, list_output):
 
     list_output.append(s)
 
-def type_S(instruct, list_output):
+def type_J(instruct, list_output):
     numeric_value_str = instruct[2]  # Remove the comma from the numeric value
     s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
 
