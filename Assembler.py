@@ -46,6 +46,7 @@ register_to_binary = {
 # Dictionary mapping instructions to their binary opcodes
 # Dictionary mapping instructions to their binary opcodes
 instruction_dict = {
+
     "add": "0110011",    # Add
     "sub": "0110011",    # Subtract
     "sll": "0110011",    # Shift Left Logical
@@ -62,6 +63,9 @@ instruction_dict = {
     "jalr": "1100111",   # Jump and Link Register
 
     "jal":"1101111",
+
+    "lui":"0110111",
+    "auipc":"0010111",
 
     # Instructions for Bonus part to be done later
     # "mul": "0000000",
@@ -193,12 +197,55 @@ def type_J(instruct, list_output):
     # Append the binary representation to the output list
     list_output.append(s)
 
+def type_U(instruct, list_output):
+    numeric_value_str = instruct[2]
+    k = decimal_to_20bit_twos_complement(int(numeric_value_str))    # Convert the numeric value to binary
+
+    # Extract the bits from the binary representation for the U-type instruction
+    s = k[0:20]
+
+    if instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    # Add opcode and register bits to the binary representation
+    s += register_to_binary[instruct[1]]
+    s += instruction_dict[instruct[0]]
+
+    # Append the binary representation to the output list
+    list_output.append(s)
+
+
+
+def type_U(instruct, list_output):
+    numeric_value_str = instruct[2]
+    k = decimal_to_20bit_twos_complement(int(numeric_value_str))    # Convert the numeric value to binary
+
+    # Extract the bits from the binary representation for the U-type instruction
+    s = k[0:20]
+
+    if instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    # Add opcode and register bits to the binary representation
+    s += register_to_binary[instruct[1]]
+    s += instruction_dict[instruct[0]]
+
+    # Append the binary representation to the output list
+    list_output.append(s)
+
+
+
+
+
 # Example usage of type_J function:
-instruct = ["jal", "t1", "-1024"]
+instruct = ["auipc", "t1", "-1024"]
 list_output = []  # Initialize the list to store binary representations
 type_J(instruct, list_output)
 
 # Print the binary representations in the list
 for i in list_output:
     print(i)
-
