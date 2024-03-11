@@ -117,17 +117,40 @@ def type_R(instruct, list_output):
 
     list_output.append(s)
 
-def decimal_to_12bit_binary(decimal_num):
-    # Ensure the input is a non-negative integer or 0
-    if not isinstance(decimal_num, int) or decimal_num < 0:
-        raise ValueError("Input must be a non-negative integer or 0")
+def decimal_to_12bit_binary(decimal_number):
+    # Check if the number is within the representable range for 12 bits
+    if decimal_number < -2**11 or decimal_number > 2**11 - 1:
+        raise ValueError("Input number is outside the representable range for 12 bits")
 
-    # Convert decimal to binary and format as 12 bits
-    binary_representation = format(decimal_num, '012b')
+    # Convert negative numbers to their 2's complement form
+    if decimal_number < 0:
+        binary_representation = bin(decimal_number & int("1"*12, 2))[2:]
+    else:
+        binary_representation = bin(decimal_number)[2:]
+
+    # Pad with zeros to make it a 12-bit binary representation
+    binary_representation = binary_representation.zfill(12)
 
     return binary_representation
 
 def type_I(instruct, list_output):
+    numeric_value_str = instruct[2]  # Remove the comma from the numeric value
+    s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
+
+    if instruct[0] not in function3 or instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    register_name = instruct[3]  # Remove the comma from the register name
+    s += register_to_binary.get(register_name, "")
+    s += function3.get(instruct[0], "")
+    s += register_to_binary.get(instruct[1], "")
+    s += instruction_dict.get(instruct[0], "")
+
+    list_output.append(s)
+
+def type_S(instruct, list_output):
     numeric_value_str = instruct[2]  # Remove the comma from the numeric value
     s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
 
