@@ -91,25 +91,6 @@ function7 = {
     "And": "0000000",    # Logical AND
 }
 
-def type_R(instruct, list_output):
-    s = ""
-
-    if instruct[0] not in function7 or instruct[0] not in function3 or instruct[0] not in instruction_dict:
-        # Handle unrecognized instruction
-        print(f"Unrecognized instruction: {instruct[0]}")
-        return
-
-    s += function7[instruct[0]]
-    s += register_to_binary[instruct[3]]
-    s += register_to_binary[instruct[2]]
-    s += function3[instruct[0]]
-    s += register_to_binary[instruct[1]]
-    s += instruction_dict[instruct[0]]
-        
-    list_output.append(s)
-
-
-
 def decimal_to_12bit_binary(decimal_num):
     # Ensure the input is a non-negative integer
     if not isinstance(decimal_num, int) or decimal_num < 0:
@@ -123,35 +104,41 @@ def decimal_to_12bit_binary(decimal_num):
 
 
 
+def type_R(instruct, list_output):
+    s = ""
+
+    if instruct[0] not in function7 or instruct[0] not in function3 or instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    s += instruction_dict.get(instruct[0], "")
+    s += register_to_binary.get(instruct[3], "")
+    s += register_to_binary.get(instruct[2], "")
+    s += register_to_binary.get(instruct[1], "")
+    s += function3.get(instruct[0], "")
+    s += register_to_binary.get(instruct[0], "")
+    s += function7.get(instruct[0], "")
+
+    list_output.append(s)
 
 
+def type_I(instruct, list_output):
+    s = ""
 
-# def type_I(instruct, list_output):
-#     s = ""
+    if instruct[0] not in function3 or instruct[0] not in instruction_dict:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
 
-#     if instruct[0] not in function3  or instruct[0] not in instruction_dict:
-#         # Handle unrecognized instruction
-#         print(f"Unrecognized instruction: {instruct[0]}")
-#         return
-#     imm=decimal_to_12bit_binary(instruct[3])
-#     s+=imm
-    
-        
-    
-#     s += register_to_binary[instruct[2]]
-#     s += function3[instruct[0]]
-#     s += register_to_binary[instruct[1]]
-#     s += instruction_dict[instruct[0]]
+    s += instruction_dict.get(instruct[0], "")
+    s += register_to_binary.get(instruct[2], "")
+    s += register_to_binary.get(instruct[1], "")
+    s += decimal_to_12bit_binary(int(instruct[3]))  # Convert the immediate value to binary
+    list_output.append(s)
 
 
-
-
-    
-        
-#     list_output.append(s)
-
-
-instruct = ["add", "ra,", "t0,", "gp"]
+instruct = ["addi", "rd", "rs", "5"]
 type_I(instruct, list_output)
 
 for i in list_output:
