@@ -230,6 +230,7 @@ def lw(instruct, list_output):
     # Append remaining bits based on the instruction type
     s += I.get(instruct[0], "")
     s += register_to_binary[instruct[1]]
+    s+="0000011"
 
     list_output.append(s)
 
@@ -249,6 +250,7 @@ def type_I(instruct, list_output):
     # Append remaining bits based on the instruction type
     s += I.get(instruct[0], "")
     s += register_to_binary[instruct[1]]
+
 
     list_output.append(s)
 
@@ -350,7 +352,7 @@ def type_B(instruct, list_output):
 
 
 # Open the file and read its contents
-with open("automatedTesting/tests/assembly/simpleBin/test2.txt", 'r') as f:
+with open("automatedTesting/tests/assembly/simpleBin/test5.txt", 'r') as f:
     # Read lines from the file and remove newline characters
     v = [line.strip() for line in f.readlines()]
 
