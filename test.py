@@ -228,6 +228,7 @@ def type_I(instruct, list_output):
     list_output.append(s)
 
 
+
 def decimal_to_20bit_twos_complement(decimal_number):
     # Check if the decimal number is within the valid range for a 20-bit 2's complement representation
     if decimal_number < -2**19 or decimal_number >= 2**19:
@@ -370,7 +371,7 @@ def process_instruction(line):
         type_B(components, list_output)
 
 # Open the file and read its contents
-with open("automatedTesting/tests/assembly/simpleBin/test1.txt", 'r') as f:
+with open("automatedTesting/tests/assembly/simpleBin/test2.txt", 'r') as f:
     # Read lines from the file and remove newline characters
     v = [line.strip() for line in f.readlines()]
 
@@ -400,7 +401,7 @@ def instruct(s):
 # Process each line and append to list_output
 for line in v:
     x = instruct(line)  # Remove leading/trailing whitespaces
-    # print(x)
+
     
     process_instruction(x)
 

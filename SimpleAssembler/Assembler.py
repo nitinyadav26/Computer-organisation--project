@@ -33,7 +33,7 @@ instruction_dict = {
     "or": "R",     # Logical OR (changed from "Or")
     "and": "R",    # Logical AND (changed from "And")
 
-    "lw": "I",     # Load Word
+    "lw": "lw",     # Load Word
     "addi": "I",   # Add Immediate
     "sltiu": "I",  # Set Less Than Immediate Unsigned
     "jalr": "I",   # Jump and Link Register
@@ -104,7 +104,7 @@ R = {
 }
 
 I = {
-    "lw": "0000011",     # Load Word
+
     "addi": "0010011",   # Add Immediate
     "sltiu": "0010011",  # Set Less Than Immediate Unsigned
     "jalr": "1100111",   # Jump and Link Register
@@ -155,6 +155,10 @@ function3 = {
     "bge": "101",
     "bltu": "110",
     "bgeu": "111",
+}
+
+l={
+        "lw": "0000011",     # Load Word
 }
 
 # Dictionary mapping instructions to their function7 values
@@ -210,23 +214,43 @@ def type_R(instruct, list_output):
 
     list_output.append(s)
 
-def type_I(instruct, list_output):
+def lw(instruct, list_output):
     numeric_value_str = instruct[2]  # Remove the comma from the numeric value
     s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
 
-    if instruct[0] not in function3 or instruct[0] not in I:
+    if instruct[0] not in l:  # Corrected to check 'l' dictionary
         # Handle unrecognized instruction
         print(f"Unrecognized instruction: {instruct[0]}")
         return
 
     register_name = instruct[3]  # Remove the comma from the register name
-    s += register_to_binary.get(register_name, "")
-    s += function3.get(instruct[0], "")
-    s += register_to_binary.get(instruct[1], "")
+    s += register_to_binary.get(register_name, "")  # Add register binary representation
+    s += function3[instruct[0]]
+
+    # Append remaining bits based on the instruction type
     s += I.get(instruct[0], "")
+    s += register_to_binary[instruct[1]]
 
     list_output.append(s)
 
+def type_I(instruct, list_output):
+    numeric_value_str = instruct[3]  # Remove the comma from the numeric value
+    s = decimal_to_12bit_binary(int(numeric_value_str))  # Convert the numeric value to binary
+
+    if instruct[0] not in I:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruct[0]}")
+        return
+
+    register_name = instruct[1]  # Remove the comma from the register name
+    s += register_to_binary.get(register_name, "")  # Add register binary representation
+    s += function3[instruct[0]]
+
+    # Append remaining bits based on the instruction type
+    s += I.get(instruct[0], "")
+    s += register_to_binary[instruct[1]]
+
+    list_output.append(s)
 
 def decimal_to_20bit_twos_complement(decimal_number):
     # Check if the decimal number is within the valid range for a 20-bit 2's complement representation
@@ -324,53 +348,9 @@ def type_B(instruct, list_output):
     list_output.append(s)
 
 
-# Function to process each instruction
-def process_instruction(line):
-    # Split the line into components
-    components = line
-
-    # Check if the instruction type is recognized
-    if components[0] in R:
-        instruction_type = "R"
-    elif components[0] in I:
-        instruction_type = "I"
-    elif components[0] in J:
-        instruction_type = "J"
-    elif components[0] in U:
-        instruction_type = "U"
-    elif components[0] in S:
-        instruction_type = "S"
-    elif components[0] in B:
-        instruction_type = "B"
-    else:
-        # Handle unrecognized instruction
-        print(f"Unrecognized instruction: {components[0]}")
-        return
-
-    # Print the original instruction
-    print(f"Original instruction: {line}")
-
-    # Check if there are enough elements in components
-    if len(components) < 2:
-        print(f"Insufficient components for instruction: {line}")
-        return
-
-    # Call the appropriate function based on the instruction type
-    if instruction_type == "R":
-        type_R(components, list_output)
-    elif instruction_type == "I":
-        type_I(components, list_output)
-    elif instruction_type == "J":
-        type_J(components, list_output)
-    elif instruction_type == "U":
-        type_U(components, list_output)
-    elif instruction_type == "S":
-        type_S(components, list_output)
-    elif instruction_type == "B":
-        type_B(components, list_output)
 
 # Open the file and read its contents
-with open("automatedTesting/tests/assembly/simpleBin/test1.txt", 'r') as f:
+with open("automatedTesting/tests/assembly/simpleBin/test2.txt", 'r') as f:
     # Read lines from the file and remove newline characters
     v = [line.strip() for line in f.readlines()]
 
@@ -392,15 +372,57 @@ def instruct(s):
                 k += s[i]
             i += 1
         if k:
-            
             t.append(k)
         return t
 
+def process_instruction(line):
+    components = line  # Split the line into components
+    
+    if not components:
+        return  # Skip empty lines
+    
+    instruction_name = components[0]  # Get the instruction name
+    
+    # Check if the instruction type is recognized
+    if instruction_name in R:
+        instruction_type = "R"
+    elif instruction_name in I:
+        instruction_type = "I"
+    elif instruction_name in J:
+        instruction_type = "J"
+    elif instruction_name in U:
+        instruction_type = "U"
+    elif instruction_name in S:
+        instruction_type = "S"
+    elif instruction_name in B:
+        instruction_type = "B"
+    elif instruction_name in l:
+        instruction_type = "lw"
+    else:
+        # Handle unrecognized instruction
+        print(f"Unrecognized instruction: {instruction_name}")
+        return
 
+    # Call the appropriate function based on the instruction type
+    if instruction_type == "R":
+        type_R(components, list_output)
+    elif instruction_type == "I":
+        type_I(components, list_output)
+    elif instruction_type == "J":
+        type_J(components, list_output)
+    elif instruction_type == "U":
+        type_U(components, list_output)
+    elif instruction_type == "S":
+        type_S(components, list_output)
+    elif instruction_type == "B":
+        type_B(components, list_output)
+    elif instruction_type == "lw":
+        lw(components, list_output)
 # Process each line and append to list_output
 for line in v:
     x = instruct(line)  # Remove leading/trailing whitespaces
-    # print(x)
+
+
     
     process_instruction(x)
 
