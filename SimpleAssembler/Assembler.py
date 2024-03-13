@@ -351,10 +351,7 @@ def type_B(instruct, list_output):
 
 
 
-# Open the file and read its contents
-with open("automatedTesting/tests/assembly/simpleBin/test1.txt", 'r') as f:
-    # Read lines from the file and remove newline characters
-    v = [line.strip() for line in f.readlines()]
+
 
 
 def instruct(s):
@@ -421,13 +418,38 @@ def process_instruction(line):
     elif instruction_type == "lw":
         lw(components, list_output)
 # Process each line and append to list_output
-for line in v:
-    x = instruct(line)  # Remove leading/trailing whitespaces
+# Open the file and read its contents
+with open("automatedTesting/tests/assembly/simpleBin/test9.txt", 'r') as f:
+    # Read lines from the file and remove newline characters
+    v = [line.strip() for line in f.readlines()]
 
+# Reset line_counter
+line_counter = 0
 
-    
-    process_instruction(x)
+def check_last_line(v):
+    global line_counter
+    if len(v) > 0:
+        last_line = v[-1].strip()
+        if last_line != "00100000000000000000001010010011":
+            # Remove the last line if it's not the required one
+            if v[-1] != "beq zero,zero,0":
+                v.pop()
+            # Append the required line
+            v.append("00100000000000000000001010010011")
+            line_counter += 1
 
+# Function to process instructions
+def process_instructions(v):
+    for line in v:
+        if line != "00100000000000000000001010010011":  # Skip the last line
+            x = instruct(line)  # Remove leading/trailing whitespaces
+            process_instruction(x)
+
+# Check and modify the last line if needed
+check_last_line(v)
+
+# Process instructions
+process_instructions(v)
 
 # Print the binary representations in the list
 # Assuming binary_representation is already defined elsewhere in your code
@@ -435,7 +457,6 @@ for line in v:
 # Open a file in write mode
 with open("binary_output.txt", "w") as file:
     for binary_representation in list_output:  # Example range, modify as needed
-        
         file.write(binary_representation + '\n')  # Write binary representation followed by a newline character
         print(binary_representation)  # Print the binary representation (optional)
 
