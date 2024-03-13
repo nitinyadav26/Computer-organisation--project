@@ -352,7 +352,7 @@ def type_B(instruct, list_output):
 
 
 # Open the file and read its contents
-with open("automatedTesting/tests/assembly/simpleBin/test5.txt", 'r') as f:
+with open("automatedTesting/tests/assembly/bin_s/test1.txt", 'r') as f:
     # Read lines from the file and remove newline characters
     v = [line.strip() for line in f.readlines()]
 
@@ -430,5 +430,14 @@ for line in v:
 
 
 # Print the binary representations in the list
-for binary_representation in list_output:
-    print(binary_representation)
+# Assuming binary_representation is already defined elsewhere in your code
+
+# Open a file in write mode
+with open("binary_output.txt", "w") as file:
+    for binary_representation in list_output:  # Example range, modify as needed
+        
+        file.write(binary_representation + '\n')  # Write binary representation followed by a newline character
+        print(binary_representation)  # Print the binary representation (optional)
+
+print("Binary representations written to binary_output.txt")
+
